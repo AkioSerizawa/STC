@@ -24,6 +24,24 @@ namespace STC.Services
             }
         }
 
+        public async Task<List<User>> GetUsers()
+        {
+            try
+            {
+                using var context = new DataContext();
+
+                List<User> users = await context.Users
+                        .AsNoTracking()
+                        .ToListAsync();
+
+                return users;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<User> GetUserByEmail(string userEmail)
         {
             try

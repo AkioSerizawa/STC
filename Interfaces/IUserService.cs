@@ -1,5 +1,4 @@
 using STC.Models;
-using STC.View.UserViewModel;
 
 namespace STC.Interfaces
 {
@@ -8,5 +7,6 @@ namespace STC.Interfaces
         public Task<int> CreateUser(User registerViewModel);
         public Task<User> GetUserById(int userId);
         public Task<User> GetUserByEmail(string userEmail);
+        public Task<List<User>> GetUsers();
     }
 }

@@ -75,5 +75,27 @@ namespace STC.Controllers
                 return StatusCode(500, new ResultViewModel<User>(UtilMessages.user02XE01(ex)));
             }
         }
+
+        [HttpGet("v1/user/profile/{userId:int}")]
+        public async Task<IActionResult> UserProfile(
+            [FromRoute] int userId
+        )
+        {
+            try
+            {
+                var user = await userService.GetUserById(userId);
+                if (user == null)
+                    return StatusCode(401, new ResultViewModel<User>(UtilMessages.user02XE06(userId)));
+
+                string userProfile = $"Cod. Usuário: {user.UserId} | Nome de Usuário: {user.UserName} | E-mail: {user.UserEmail}";
+
+                return Ok(new ResultViewModel<dynamic>(userProfile, null));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ResultViewModel<User>(UtilMessages.user02XE01(ex)));
+            }
+        }
     }
+
 }
