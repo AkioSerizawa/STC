@@ -8,6 +8,8 @@ namespace STC.Data
     {
         #region DbSet
 
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Professional> Professionals { get; set; }
         public DbSet<User> Users { get; set; }
 
         #endregion
@@ -19,6 +21,8 @@ namespace STC.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new ClientMap());
+            modelBuilder.ApplyConfiguration(new ProfessionalMap());
             modelBuilder.ApplyConfiguration(new UserMap());
         }
     }
