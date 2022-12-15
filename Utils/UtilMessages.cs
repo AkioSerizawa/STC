@@ -22,5 +22,13 @@ namespace STC.Utils
         public static string user02XE06(int userId) => $"02XE06 - Usuário não encontrado - '{userId}'";
 
         #endregion
+
+        #region Client
+
+        public static string client03XE01(Exception ex) => $"03XE01 - Falha interna no servidor - | {ex.Message} |";
+        public static string client03XE02(Exception ex) => $"03XE02 - Falha ao incluir o cliente - | {ex.Message} |";
+        public static string client03XE03() => $"03XE03 - Nenhum cliente encontrado!";
+
+        #endregion
     }
 }

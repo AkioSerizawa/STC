@@ -9,6 +9,7 @@ namespace STC.Data
         #region DbSet
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Client> Clients { get; set; }
 
         #endregion
 
@@ -20,6 +21,7 @@ namespace STC.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.ApplyConfiguration(new ClientMap());
         }
     }
 }
