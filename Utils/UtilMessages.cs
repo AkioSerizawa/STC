@@ -30,5 +30,13 @@ namespace STC.Utils
         public static string client03XE03() => $"03XE03 - Nenhum cliente encontrado!";
 
         #endregion
+
+        #region Professional
+
+        public static string professional04XE01(Exception ex) => $"04XE01 - Falha interna no servidor - | {ex.Message} |";
+        public static string professional04XE02(Exception ex) => $"04XE02 - Falha ao incluir o profissional - | {ex.Message} |";
+        public static string professional04XE03() => $"04XE03 - Nenhum Profissional encontrado";
+
+        #endregion
     }
 }
