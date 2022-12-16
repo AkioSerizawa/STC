@@ -5,15 +5,15 @@ using STC.Models;
 
 namespace STC.Services
 {
-    public class ClientService : IClientService
+    public class TypeConsultationService : ITypeConsultationService
     {
-        public async Task<Client> CreateClient(Client model)
+        public async Task<TypeConsultation> CreateTypeConsultation(TypeConsultation model)
         {
             try
             {
                 using var context = new DataContext();
 
-                await context.Client.AddAsync(model);
+                await context.TypeConsultation.AddAsync(model);
                 await context.SaveChangesAsync();
 
                 return model;
@@ -24,17 +24,17 @@ namespace STC.Services
             }
         }
 
-        public async Task<Client> GetUserById(int cliId)
+        public async Task<List<TypeConsultation>> GetTypeConsultations()
         {
             try
             {
                 using var context = new DataContext();
 
-                Client client = await context.Client
+                var typeConsultations = await context.TypeConsultation
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.CliId == cliId);
+                    .ToListAsync();
 
-                return client;
+                return typeConsultations;
             }
             catch (Exception ex)
             {
@@ -42,17 +42,17 @@ namespace STC.Services
             }
         }
 
-        public async Task<List<Client>> GetUsers()
+        public async Task<TypeConsultation> GetTypeConsultationsById(int typeId)
         {
             try
             {
                 using var context = new DataContext();
 
-                List<Client> clients = await context.Client
+                var type = await context.TypeConsultation
                     .AsNoTracking()
-                    .ToListAsync();
+                    .FirstOrDefaultAsync(x => x.TypeId == typeId);
 
-                return clients;
+                return type;
             }
             catch (Exception ex)
             {

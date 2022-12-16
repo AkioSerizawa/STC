@@ -7,7 +7,7 @@ namespace STC.Utils
         public static string information01XE01(Exception ex) =>
             $"01XE01 - TimeOut, Processamento tomou mais tempo do que o permitido | {ex.Message} |";
 
-        #endregion
+        #endregion Information
 
         #region User
 
@@ -21,7 +21,7 @@ namespace STC.Utils
         public static string user02XE05() => "02XE05 - Email já cadastrado";
         public static string user02XE06(int userId) => $"02XE06 - Usuário não encontrado - '{userId}'";
 
-        #endregion
+        #endregion User
 
         #region Client
 
@@ -29,7 +29,7 @@ namespace STC.Utils
         public static string client03XE02(Exception ex) => $"03XE02 - Falha ao incluir o cliente - | {ex.Message} |";
         public static string client03XE03() => $"03XE03 - Nenhum cliente encontrado!";
 
-        #endregion
+        #endregion Client
 
         #region Professional
 
@@ -37,6 +37,13 @@ namespace STC.Utils
         public static string professional04XE02(Exception ex) => $"04XE02 - Falha ao incluir o profissional - | {ex.Message} |";
         public static string professional04XE03() => $"04XE03 - Nenhum Profissional encontrado";
 
-        #endregion
+        #endregion Professional
+
+        #region TypeConsultation
+
+        public static string typeConsultation05XE01(Exception ex) => $"05XE01 - Falha interna no servidor - | {ex.Message} |";
+        public static string typeConsultation05XE02(Exception ex) => $"05XE02 - Falha ao incluir o profissional - | {ex.Message} |";
+
+        #endregion TypeConsultation
     }
 }

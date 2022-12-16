@@ -2,9 +2,9 @@ using STC.Models;
 using STC.Services;
 using STC.View.ProfessionalViewModel;
 
-namespace STC.Helpers
+namespace STC.Application
 {
-    public class ProfessionalHelper
+    public class ProfessionalApplication
     {
         private ProfessionalService professionalService = new ProfessionalService();
 

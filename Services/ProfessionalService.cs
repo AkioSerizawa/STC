@@ -13,7 +13,7 @@ namespace STC.Services
             {
                 using var context = new DataContext();
 
-                await context.Professionals.AddAsync(model);
+                await context.Professional.AddAsync(model);
                 await context.SaveChangesAsync();
 
                 return model;
@@ -30,7 +30,7 @@ namespace STC.Services
             {
                 using var context = new DataContext();
 
-                var professional = await context.Professionals
+                var professional = await context.Professional
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.ProfId == profId);
 
@@ -48,7 +48,7 @@ namespace STC.Services
             {
                 using var context = new DataContext();
 
-                List<Professional> professionals = await context.Professionals
+                List<Professional> professionals = await context.Professional
                     .AsNoTracking()
                     .ToListAsync();
 

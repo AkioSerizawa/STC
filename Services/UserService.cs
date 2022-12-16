@@ -13,7 +13,7 @@ namespace STC.Services
             {
                 using var context = new DataContext();
 
-                await context.Users.AddAsync(registerViewModel);
+                await context.User.AddAsync(registerViewModel);
                 await context.SaveChangesAsync();
 
                 return registerViewModel.UserId;
@@ -30,7 +30,7 @@ namespace STC.Services
             {
                 using var context = new DataContext();
 
-                List<User> users = await context.Users
+                List<User> users = await context.User
                         .AsNoTracking()
                         .ToListAsync();
 
@@ -48,7 +48,7 @@ namespace STC.Services
             {
                 using var context = new DataContext();
 
-                User user = await context.Users
+                User user = await context.User
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.UserEmail.Contains(userEmail));
 
@@ -66,7 +66,7 @@ namespace STC.Services
             {
                 using var context = new DataContext();
 
-                User user = await context.Users
+                User user = await context.User
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.UserId == userId);
 

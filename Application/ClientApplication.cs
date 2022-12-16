@@ -2,9 +2,9 @@ using STC.Models;
 using STC.Services;
 using STC.View.ClientViewModel;
 
-namespace STC.Helpers
+namespace STC.Application
 {
-    public class ClientHelper
+    public class ClientApplication
     {
         private ClientService clientService = new ClientService();
 
