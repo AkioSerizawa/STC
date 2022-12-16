@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using STC.Application;
 using STC.Extensions;
-using STC.Helpers;
 using STC.Models;
 using STC.Services;
 using STC.Utils;
@@ -13,7 +13,7 @@ namespace STC.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
-        private ClientHelper clientHelper = new ClientHelper();
+        private ClientApplication clientApplication = new ClientApplication();
         private ClientService clientService = new ClientService();
 
         [HttpPost("v1/client")]
@@ -26,7 +26,7 @@ namespace STC.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
 
-                var client = await clientHelper.CreateClient(model);
+                var client = await clientApplication.CreateClient(model);
                 string clientFormatted = $"Cliente criado com sucesso - Id: {client.CliId} | Nome do Cliente: {client.CliName}";
 
                 return Ok(new ResultViewModel<dynamic>(clientFormatted, null));

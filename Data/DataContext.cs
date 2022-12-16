@@ -8,9 +8,10 @@ namespace STC.Data
     {
         #region DbSet
 
-        public DbSet<Client> Clients { get; set; }
-        public DbSet<Professional> Professionals { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Client> Client { get; set; }
+        public DbSet<Professional> Professional { get; set; }
+        public DbSet<TypeConsultation> TypeConsultation { get; set; }
+        public DbSet<User> User { get; set; }
 
         #endregion
 
@@ -23,6 +24,7 @@ namespace STC.Data
         {
             modelBuilder.ApplyConfiguration(new ClientMap());
             modelBuilder.ApplyConfiguration(new ProfessionalMap());
+            modelBuilder.ApplyConfiguration(new TypeConsultationMap());
             modelBuilder.ApplyConfiguration(new UserMap());
         }
     }

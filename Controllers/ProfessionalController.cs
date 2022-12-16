@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using STC.Application;
 using STC.Extensions;
-using STC.Helpers;
 using STC.Models;
 using STC.Services;
 using STC.Utils;
@@ -13,7 +13,7 @@ namespace STC.Controllers
     [ApiController]
     public class ProfessionalController : ControllerBase
     {
-        private ProfessionalHelper professionalHelper = new ProfessionalHelper();
+        private ProfessionalApplication professionalApplication = new ProfessionalApplication();
         private ProfessionalService professionalService = new ProfessionalService();
 
         [HttpPost("v1/professional")]
@@ -26,7 +26,7 @@ namespace STC.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
 
-                var professional = await professionalHelper.CreateProfessionalAsync(model);
+                var professional = await professionalApplication.CreateProfessionalAsync(model);
                 string professionalFormatted = $"Professional cadastro com sucesso - Id: {professional.ProfId} | Nome: {professional.ProfName} | Profissão: {professional.ProfJob} | Habilitado para consultas: {professional.ProfConsultation} | Profissional Ativo: {professional.ProfActive}";
 
                 return Ok(new ResultViewModel<dynamic>(professionalFormatted, null));
