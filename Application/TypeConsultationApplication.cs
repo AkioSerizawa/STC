@@ -1,40 +1,37 @@
 using STC.DTOs.TypeConsultation;
 using STC.Models;
 using STC.Services;
-using STC.View.TypeConsultationViewModel;
 
 namespace STC.Application
 {
     public class TypeConsultationApplication
     {
+        #region Properties
+
         private TypeConsultationService typeConsultationService = new TypeConsultationService();
 
-        public async Task<TypeConsultation> CreateTypeConsultation(CreateTypeConsultationDTO model)
-        {
-            try
-            {
-                var typeConsultation = new TypeConsultation
-                {
-                    TypeName = model.TypeName,
-                    TypePrice = model.TypePrice,
-                    TypeActive = model.TypeActive
-                };
+        #endregion Properties
 
-                await typeConsultationService.CreateTypeConsultation(typeConsultation);
-                return typeConsultation;
-            }
-            catch (Exception ex)
+        #region Methods
+
+        public async Task<TypeConsultation> CreateTypeConsultationAsync(CreateTypeConsultationDTO model)
+        {
+            var typeConsultation = new TypeConsultation
             {
-                throw ex;
-            }
+                TypeName = model.TypeName,
+                TypePrice = model.TypePrice,
+                TypeActive = model.TypeActive
+            };
+
+            var typeCreated = await typeConsultationService.CreateTypeConsultation(typeConsultation);
+            return typeCreated;
         }
 
-        public async Task<List<TypeConsultation>> GetTypeConsultations()
+        public async Task<List<TypeConsultation>> GetTypeConsultationsAsync()
         {
             try
             {
                 List<TypeConsultation> typeConsultations = await typeConsultationService.GetTypeConsultations();
-
                 return typeConsultations;
             }
             catch (Exception ex)
@@ -46,8 +43,9 @@ namespace STC.Application
         public async Task<TypeConsultation> GetTypeById(int typeId)
         {
             var typeConsultation = await typeConsultationService.GetTypeConsultationsById(typeId);
-
             return typeConsultation;
         }
+
+        #endregion Methods
     }
 }

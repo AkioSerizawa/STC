@@ -4,9 +4,6 @@ namespace STC.View.ClientViewModel
 {
     public class CreateClienteViewModel
     {
-        [Required(ErrorMessage = "O nome é obrigatório")]
-        [MaxLength(80, ErrorMessage = "Atingiu o número máximo de caracteres")]
-        [MinLength(3, ErrorMessage = "O nome está muito pequeno")]
         public string CliName { get; set; }
         public string CliNameMother { get; set; }
         public string CliNameFather { get; set; }
@@ -23,8 +20,6 @@ namespace STC.View.ClientViewModel
         public string CliPhoneNumber { get; set; }
         public string CliPhoneCell { get; set; }
         public string CliNote { get; set; }
-        
-        [Required(ErrorMessage = "Precisa informar se o cliente está ativo ou não")]
         public bool CliActive { get; set; }
     }
 }

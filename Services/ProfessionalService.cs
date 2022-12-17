@@ -42,7 +42,7 @@ namespace STC.Services
             }
         }
 
-        public async Task<List<Professional>> GetProfessionals()
+        public async Task<List<Professional>> GetAllProfessionals()
         {
             try
             {

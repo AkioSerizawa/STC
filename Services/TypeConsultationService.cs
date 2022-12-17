@@ -12,7 +12,6 @@ namespace STC.Services
             try
             {
                 using var context = new DataContext();
-
                 await context.TypeConsultation.AddAsync(model);
                 await context.SaveChangesAsync();
 
@@ -29,7 +28,6 @@ namespace STC.Services
             try
             {
                 using var context = new DataContext();
-
                 var typeConsultations = await context.TypeConsultation
                     .AsNoTracking()
                     .ToListAsync();
@@ -47,7 +45,6 @@ namespace STC.Services
             try
             {
                 using var context = new DataContext();
-
                 var type = await context.TypeConsultation
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.TypeId == typeId);

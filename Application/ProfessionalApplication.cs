@@ -1,3 +1,4 @@
+using STC.DTOs.Professional;
 using STC.Models;
 using STC.Services;
 using STC.View.ProfessionalViewModel;
@@ -8,7 +9,7 @@ namespace STC.Application
     {
         private ProfessionalService professionalService = new ProfessionalService();
 
-        public async Task<Professional> CreateProfessionalAsync(CreateProfessionalViewModel model)
+        public async Task<Professional> CreateProfessionalAsync(CreateProfessionalDTO model)
         {
             try
             {
@@ -28,6 +29,18 @@ namespace STC.Application
             {
                 throw ex;
             }
+        }
+
+        public async Task<List<Professional>> GetAllProfessionalsAsync()
+        {
+            List<Professional> professionals = await professionalService.GetAllProfessionals();
+            return professionals;
+        }
+
+        public async Task<Professional> GetProfessionalByIdAsync(int profId)
+        {
+            Professional professional = await professionalService.GetProfessionalById(profId);
+            return professional;
         }
     }
 }

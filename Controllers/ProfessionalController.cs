@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using STC.Application;
+using STC.DTOs.Professional;
 using STC.Extensions;
 using STC.Models;
 using STC.Services;
@@ -11,14 +13,34 @@ using STC.View.ProfessionalViewModel;
 namespace STC.Controllers
 {
     [ApiController]
+    [Route("api/v1/[controller]")]
     public class ProfessionalController : ControllerBase
     {
+        #region Properties
+
         private ProfessionalApplication professionalApplication = new ProfessionalApplication();
         private ProfessionalService professionalService = new ProfessionalService();
+        private readonly IMapper _mapper;
 
-        [HttpPost("v1/professional")]
-        public async Task<IActionResult> CreateProfessionalAsync(
-            [FromBody] CreateProfessionalViewModel model
+        #endregion Properties
+
+        #region Constructors
+
+        public ProfessionalController(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
+        #endregion Constructors
+
+        #region Methods
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultViewModel<CreateProfessionalViewModel>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ResultViewModel<CreateProfessionalViewModel>>> CreateProfessional(
+            [FromBody] CreateProfessionalDTO model
         )
         {
             try
@@ -27,9 +49,9 @@ namespace STC.Controllers
                     return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
 
                 var professional = await professionalApplication.CreateProfessionalAsync(model);
-                string professionalFormatted = $"Professional cadastro com sucesso - Id: {professional.ProfId} | Nome: {professional.ProfName} | Profissão: {professional.ProfJob} | Habilitado para consultas: {professional.ProfConsultation} | Profissional Ativo: {professional.ProfActive}";
+                var professionalViewModel = _mapper.Map<CreateProfessionalViewModel>(professional);
 
-                return Ok(new ResultViewModel<dynamic>(professionalFormatted, null));
+                return Ok(new ResultViewModel<CreateProfessionalViewModel>(professionalViewModel));
             }
             catch (DbUpdateException ex)
             {
@@ -41,33 +63,32 @@ namespace STC.Controllers
             }
         }
 
-        [HttpGet("v1/professional")]
-        public async Task<IActionResult> GetProfessionals()
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultViewModel<List<Professional>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResultViewModel<Professional>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ResultViewModel<List<Professional>>>> GetAllProfessionals()
         {
-            try
-            {
-                List<Professional> professionals = await professionalService.GetProfessionals();
-                if (professionals.Count == 0)
-                    return NotFound(new ResultViewModel<Professional>(UtilMessages.professional04XE03()));
+            List<Professional> professionals = await professionalApplication.GetAllProfessionalsAsync();
+            if (professionals.Count == 0)
+                return NotFound(new ResultViewModel<Professional>(UtilMessages.professional04XE03()));
 
-                return Ok(new ResultViewModel<List<Professional>>(professionals));
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return Ok(new ResultViewModel<List<Professional>>(professionals));
         }
 
-        [HttpGet("v1/professional/{profId:int}")]
-        public async Task<IActionResult> GetProfessionalById(
+        [HttpGet("{profId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultViewModel<Professional>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResultViewModel<Professional>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ResultViewModel<Professional>>> GetProfessionalById(
             [FromRoute] int profId
         )
         {
             try
             {
-                Professional professional = await professionalService.GetProfessionalById(profId);
+                Professional professional = await professionalApplication.GetProfessionalByIdAsync(profId);
                 if (professional == null)
-                    return NotFound(new ResultViewModel<Client>(UtilMessages.professional04XE03()));
+                    return NotFound(new ResultViewModel<Professional>(UtilMessages.professional04XE03()));
 
                 return Ok(new ResultViewModel<Professional>(professional));
             }
@@ -76,5 +97,17 @@ namespace STC.Controllers
                 return StatusCode(500, new ResultViewModel<Professional>(UtilMessages.professional04XE01(ex)));
             }
         }
+
+        [HttpGet("{profName")]
+        public async Task<ActionResult> GetProfessionalByName(
+            [FromRoute] string profName
+        )
+        {
+            // Professional professional = 
+
+            return Ok();
+        }
+
+        #endregion Methods
     }
 }
