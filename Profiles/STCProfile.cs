@@ -1,5 +1,6 @@
 using AutoMapper;
 using STC.Models;
+using STC.View.ProfessionalViewModel;
 using STC.View.TypeConsultationViewModel;
 
 namespace STC.Profiles
@@ -9,6 +10,7 @@ namespace STC.Profiles
         public STCProfile()
         {
             CreateMap<TypeConsultation, CreateTypeConsultationViewModel>();
+            // CreateMap<Professional, ProfessionalViewModel>().ReverseMap();
         }
     }
 }

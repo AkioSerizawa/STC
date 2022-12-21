@@ -1,23 +1,34 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SecureIdentity.Password;
+using STC.Application;
+using STC.DTOs.UserDto;
 using STC.Extensions;
 using STC.Models;
-using STC.Services;
 using STC.Utils;
 using STC.View;
-using STC.View.UserViewModel;
 
 namespace STC.Controllers
 {
     [ApiController]
+    [Route("api/v1/[controller]")]
     public class UserController : ControllerBase
     {
-        private UserService userService = new UserService();
+        #region Properties
 
-        [HttpPost("v1/user")]
-        public async Task<IActionResult> CreateUser(
-            [FromBody] RegisterViewModel model
+        private UserApplication userApplication = new UserApplication();
+
+        #endregion Properties
+
+        #region Methods
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultViewModel<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultViewModel<User>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResultViewModel<User>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ResultViewModel<string>>> CreateUser(
+            [FromBody] RegisterUserDTO model
         )
         {
             try
@@ -25,21 +36,15 @@ namespace STC.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
 
-                var userVerify = await userService.GetUserByEmail(model.UserEmail);
+                var userVerify = await userApplication.GetUserByEmailAsync(model.UserEmail);
                 if (userVerify != null)
                     return StatusCode(404, new ResultViewModel<User>(UtilMessages.user02XE05()));
 
-                var user = new User
-                {
-                    UserName = model.UserName,
-                    UserEmail = model.UserEmail,
-                    UserPassword = PasswordHasher.Hash(model.UserPassword)
-                };
+                var userCreateId = await userApplication.CreateUserAsync(model);
+                string userFormatted =
+                    $"Id: {userCreateId} | Nome de Usuario: {model.UserName} | Email: {model.UserEmail}";
 
-                var userCreateId = await userService.CreateUser(user);
-                string userFormatted = $"Id: {userCreateId} | Nome de Usuario: {model.UserName} | Email: {model.UserEmail}";
-
-                return Ok(new ResultViewModel<dynamic>(userFormatted, null));
+                return Ok(new ResultViewModel<string>(userFormatted, null));
             }
             catch (DbUpdateException ex)
             {
@@ -51,9 +56,12 @@ namespace STC.Controllers
             }
         }
 
-        [HttpPost("v1/user/login")]
-        public async Task<IActionResult> LoginUser(
-            [FromBody] LoginViewModel model
+        [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(ResultViewModel<string>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResultViewModel<User>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ResultViewModel<string>>> LoginUser(
+            [FromBody] LoginUserDTO model
         )
         {
             try
@@ -61,7 +69,7 @@ namespace STC.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
 
-                var userVerify = await userService.GetUserByEmail(model.UserEmail);
+                var userVerify = await userApplication.GetUserByEmailAsync(model.UserEmail);
                 if (userVerify == null)
                     return StatusCode(401, new ResultViewModel<User>(UtilMessages.user02XE03()));
 
@@ -76,26 +84,31 @@ namespace STC.Controllers
             }
         }
 
-        [HttpGet("v1/user/profile/{userId:int}")]
-        public async Task<IActionResult> UserProfile(
+        [HttpGet("{userId}")]
+        [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(ResultViewModel<string>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResultViewModel<User>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ResultViewModel<string>>> UserProfile(
             [FromRoute] int userId
         )
         {
             try
             {
-                var user = await userService.GetUserById(userId);
+                var user = await userApplication.GetUserByIdAsync(userId);
                 if (user == null)
                     return StatusCode(401, new ResultViewModel<User>(UtilMessages.user02XE06(userId)));
 
-                string userProfile = $"Cod. Usuário: {user.UserId} | Nome de Usuário: {user.UserName} | E-mail: {user.UserEmail}";
+                string userProfile =
+                    $"Cod. Usuário: {user.UserId} | Nome de Usuário: {user.UserName} | E-mail: {user.UserEmail}";
 
-                return Ok(new ResultViewModel<dynamic>(userProfile, null));
+                return Ok(new ResultViewModel<string>(userProfile, null));
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new ResultViewModel<User>(UtilMessages.user02XE01(ex)));
             }
         }
-    }
 
+        #endregion Methods
+    }
 }

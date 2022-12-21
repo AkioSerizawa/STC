@@ -59,5 +59,21 @@ namespace STC.Services
                 throw ex;
             }
         }
+
+        public async Task<Professional> UpdateProfessional(Professional model)
+        {
+            try
+            {
+                using var context = new DataContext();
+
+                context.Professional.Update(model);
+
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

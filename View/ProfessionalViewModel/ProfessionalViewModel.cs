@@ -1,10 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace STC.View.ProfessionalViewModel
 {
-    public class CreateProfessionalViewModel
+    public class ProfessionalViewModel
     {
-
+        public int ProfId { get; set; }
         public string ProfName { get; set; }
 
         public string ProfCell { get; set; }

@@ -7,9 +7,14 @@ namespace STC.Application
 {
     public class ProfessionalApplication
     {
+        #region Properties
+
         private ProfessionalService professionalService = new ProfessionalService();
 
-        public async Task<Professional> CreateProfessionalAsync(CreateProfessionalDTO model)
+        #endregion Properties
+
+        #region Methods
+        public async Task<ProfessionalViewModel> CreateProfessionalAsync(CreateProfessionalDTO model)
         {
             try
             {
@@ -23,7 +28,17 @@ namespace STC.Application
                 };
 
                 await professionalService.CreateProfessional(professional);
-                return professional;
+                var professionalViewModel = new ProfessionalViewModel
+                {
+                    ProfId = professional.ProfId,
+                    ProfName = professional.ProfName,
+                    ProfCell = professional.ProfCell,
+                    ProfJob = professional.ProfJob,
+                    ProfConsultation = professional.ProfConsultation,
+                    ProfActive = professional.ProfActive
+                };
+
+                return professionalViewModel;
             }
             catch (Exception ex)
             {
@@ -31,16 +46,56 @@ namespace STC.Application
             }
         }
 
-        public async Task<List<Professional>> GetAllProfessionalsAsync()
+        public async Task<int> UpdateProfessionalAsync(UpdateProfessionalDTO model)
         {
-            List<Professional> professionals = await professionalService.GetAllProfessionals();
-            return professionals;
+            Professional professionalValidated = await professionalService.GetProfessionalById(model.ProfId);
+
+            professionalValidated.ProfName = model.ProfName;
+            professionalValidated.ProfCell = model.ProfCell;
+            professionalValidated.ProfJob = model.ProfJob;
+            professionalValidated.ProfConsultation = model.ProfConsultation;
+            professionalValidated.ProfActive = model.ProfActive;
+
+            await professionalService.UpdateProfessional(professionalValidated);
+
+            return model.ProfId;
         }
 
-        public async Task<Professional> GetProfessionalByIdAsync(int profId)
+        public async Task<List<ProfessionalViewModel>> GetAllProfessionalsAsync()
+        {
+            List<Professional> professionals = await professionalService.GetAllProfessionals();
+
+            List<ProfessionalViewModel> professionalViewModel = new List<ProfessionalViewModel>();
+            foreach (var item in professionals)
+            {
+                ProfessionalViewModel model = new ProfessionalViewModel();
+                model.ProfId = item.ProfId;
+                model.ProfName = item.ProfName;
+                model.ProfCell = item.ProfCell;
+                model.ProfJob = item.ProfJob;
+                model.ProfConsultation = item.ProfConsultation;
+                model.ProfActive = item.ProfActive;
+
+                professionalViewModel.Add(model);
+            }
+            return professionalViewModel;
+        }
+
+        public async Task<ProfessionalViewModel> GetProfessionalByIdAsync(int profId)
         {
             Professional professional = await professionalService.GetProfessionalById(profId);
-            return professional;
+            var professionalView = new ProfessionalViewModel
+            {
+                ProfId = professional.ProfId,
+                ProfName = professional.ProfName,
+                ProfCell = professional.ProfCell,
+                ProfJob = professional.ProfJob,
+                ProfConsultation = professional.ProfConsultation,
+                ProfActive = professional.ProfActive
+            };
+            return professionalView;
         }
+
+        #endregion Methods
     }
 }
