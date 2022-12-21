@@ -42,7 +42,7 @@ namespace STC.Services
             }
         }
 
-        public async Task<List<Client>> GetUsers()
+        public async Task<List<Client>> GetAllUser()
         {
             try
             {

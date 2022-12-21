@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using STC.Application;
+using STC.DTOs.ClientDto;
 using STC.Extensions;
 using STC.Models;
 using STC.Services;
@@ -11,14 +12,21 @@ using STC.View.ClientViewModel;
 namespace STC.Controllers
 {
     [ApiController]
+    [Route("api/v1/[controller]")]
     public class ClientController : ControllerBase
     {
+        #region Properties
+
         private ClientApplication clientApplication = new ClientApplication();
         private ClientService clientService = new ClientService();
 
-        [HttpPost("v1/client")]
-        public async Task<IActionResult> CreateClientAsync(
-            [FromBody] CreateClienteViewModel model
+        #endregion Properties
+
+        #region Methods
+
+        [HttpPost]
+        public async Task<ActionResult<ResultViewModel<dynamic>>> CreateClientAsync(
+            [FromBody] CreateClientDTO model
         )
         {
             try
@@ -27,7 +35,8 @@ namespace STC.Controllers
                     return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
 
                 var client = await clientApplication.CreateClient(model);
-                string clientFormatted = $"Cliente criado com sucesso - Id: {client.CliId} | Nome do Cliente: {client.CliName}";
+                string clientFormatted =
+                    $"Cliente criado com sucesso - Id: {client.CliId} | Nome do Cliente: {client.CliName}";
 
                 return Ok(new ResultViewModel<dynamic>(clientFormatted, null));
             }
@@ -41,16 +50,16 @@ namespace STC.Controllers
             }
         }
 
-        [HttpGet("v1/client")]
-        public async Task<IActionResult> GetClientsAsync()
+        [HttpGet]
+        public async Task<ActionResult<ResultViewModel<List<ClientViewModel>>>> GetClientsAsync()
         {
             try
             {
-                List<Client> clients = await clientService.GetUsers();
+                var clients = await clientApplication.GetAllClientAsync();
                 if (clients.Count == 0)
                     return NotFound(new ResultViewModel<Client>(UtilMessages.client03XE03()));
 
-                return Ok(new ResultViewModel<List<Client>>(clients));
+                return Ok(new ResultViewModel<List<ClientViewModel>>(clients));
             }
             catch (Exception ex)
             {
@@ -58,23 +67,25 @@ namespace STC.Controllers
             }
         }
 
-        [HttpGet("v1/client/{cliId:int}")]
-        public async Task<IActionResult> GetClientByIdAsync(
+        [HttpGet("{cliId}")]
+        public async Task<ActionResult<ResultViewModel<ClientViewModel>>> GetClientByIdAsync(
             [FromRoute] int cliId
         )
         {
             try
             {
-                Client client = await clientService.GetUserById(cliId);
+                var client = await clientApplication.GetClientById(cliId);
                 if (client == null)
                     return NotFound(new ResultViewModel<Client>(UtilMessages.client03XE03()));
 
-                return Ok(new ResultViewModel<Client>(client));
+                return Ok(new ResultViewModel<ClientViewModel>(client));
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new ResultViewModel<Client>(UtilMessages.client03XE01(ex)));
             }
         }
+
+        #endregion Methods
     }
 }
