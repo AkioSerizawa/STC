@@ -4,7 +4,6 @@ using STC.Application;
 using STC.DTOs.ClientDto;
 using STC.Extensions;
 using STC.Models;
-using STC.Services;
 using STC.Utils;
 using STC.View;
 using STC.View.ClientViewModel;
@@ -18,13 +17,16 @@ namespace STC.Controllers
         #region Properties
 
         private ClientApplication clientApplication = new ClientApplication();
-        private ClientService clientService = new ClientService();
 
         #endregion Properties
 
         #region Methods
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultViewModel<dynamic>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultViewModel<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultViewModel<Client>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ResultViewModel<dynamic>>> CreateClientAsync(
             [FromBody] CreateClientDTO model
         )
@@ -51,6 +53,9 @@ namespace STC.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultViewModel<List<ClientViewModel>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResultViewModel<Client>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ResultViewModel<List<ClientViewModel>>>> GetClientsAsync()
         {
             try
@@ -68,6 +73,9 @@ namespace STC.Controllers
         }
 
         [HttpGet("{cliId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultViewModel<ClientViewModel>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResultViewModel<Client>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ResultViewModel<ClientViewModel>>> GetClientByIdAsync(
             [FromRoute] int cliId
         )
